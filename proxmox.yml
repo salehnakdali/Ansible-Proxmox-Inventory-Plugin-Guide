@@ -1,0 +1,25 @@
+---
+plugin: community.general.proxmox
+url: "{{ lookup('env', 'PROXMOX_URL') }}"
+user: "{{ lookup('env', 'PROXMOX_USER') }}"
+token_id: "{{ lookup('env', 'PROXMOX_TOKEN_ID') }}"
+token_secret: "{{ lookup('env', 'PROXMOX_TOKEN_SECRET') }}"
+validate_certs: false
+want_facts: true
+qemu_extended_statuses: true
+want_proxmox_nodes_ansible_host: true
+hostname: inventory_hostname
+keyed_groups:
+  - key: proxmox_tags_parsed
+    separator: ""
+    prefix: tag_
+# Tags for VMs (e.g., linux, win, testenv, prodenv, ol8, ol9, etc.)
+# This will create groups based on those tags.
+# Refer to https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_inventory.html
+groups:
+  prox-linuxservers: "'linux' in (proxmox_tags_parsed|list)"
+  prox-winservers: "'win' in (proxmox_tags_parsed|list)"
+  prox-testservers: "'testenv' in (proxmox_tags_parsed|list)"
+  prox-prodservers: "'prodenv' in (proxmox_tags_parsed|list)"
+  prox-ol8: "'ol8' in (proxmox_tags_parsed|list)"
+  prox-ol9: "'ol9' in (proxmox_tags_parsed|list)"
